@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import MovieCard from "./MovieCard";
+import { Button } from "@material-ui/core"
 
 function Movie({ addToSavedList }) {
   const [movie, setMovie] = useState(null);
   const params = useParams();
+  const { push } = useHistory();
 
   const fetchMovie = (id) => {
     axios
@@ -29,6 +31,8 @@ function Movie({ addToSavedList }) {
   return (
     <div className="save-wrapper">
       <MovieCard movie={movie} />
+      <Button onClick={() => push(`/UpdateMovie/${movie.id}`)}>Update</Button>
+      <Button>Delete </Button>
 
       <div className="save-button" onClick={saveMovie}>
         Save
