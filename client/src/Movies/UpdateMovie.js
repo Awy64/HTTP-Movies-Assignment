@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Input, Grid, Container, Button } from '@material-ui/core'
-import { useParams } from "react-router-dom"
+import { useParams, useHistory } from "react-router-dom"
 
 const initialState = {
   id: "",
@@ -14,6 +14,7 @@ const initialState = {
 const UpdateMovie = props => {
   const [movie, setMovie] = useState(initialState)
   const params = useParams();
+  const {push} = useHistory()
 
   const fetchMovie = (id) => {
     axios
@@ -33,7 +34,11 @@ const UpdateMovie = props => {
   const handleSubmit = e => {
     e.preventDefault()
     axios.put(`http://localhost:5000/api/movies/${movie.id}`, movie)
-      .then(res => setMovie(res.data))
+      .then(res => {
+        console.log(res.data)
+        setMovie(initialState)
+        push(`/movies/${params.id}`)
+      })
   }
 
   useEffect(() => {
@@ -45,7 +50,7 @@ const UpdateMovie = props => {
   return (
     <div>
       <Grid  aligncontent="space-around">
-      <form>
+      <form onSubmit={handleSubmit}>
         <Container direction="column">
         <Input type="text" name="title" value={movie.title} onChange={handleChange} />
         </Container>
@@ -59,7 +64,7 @@ const UpdateMovie = props => {
         <Input type="text" name="stars" value={movie.stars} onChange={handleChange} />
         </Container>
         <Container direction="column">
-        <Button>Submit</Button>
+        <Button type="submit">Submit</Button>
         </Container>
       </form>
       </Grid>
