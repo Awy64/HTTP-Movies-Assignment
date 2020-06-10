@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Input, Grid, Container, Button } from '@material-ui/core'
 import { useParams, useHistory } from "react-router-dom"
 
+
 const initialState = {
   id: "",
   title: "",
@@ -36,6 +37,7 @@ const UpdateMovie = props => {
     axios.put(`http://localhost:5000/api/movies/${movie.id}`, movie)
       .then(res => {
         console.log(res.data)
+        props.getMovieList()
         setMovie(initialState)
         push(`/movies/${params.id}`)
       })
