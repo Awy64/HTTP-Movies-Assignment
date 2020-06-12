@@ -4,7 +4,7 @@ import { useParams, useHistory } from "react-router-dom";
 import MovieCard from "./MovieCard";
 import { Button } from "@material-ui/core"
 
-function Movie({ addToSavedList }) {
+function Movie({ addToSavedList, getMovieList }) {
   const [movie, setMovie] = useState(null);
   const params = useParams();
   const { push } = useHistory();
@@ -20,6 +20,15 @@ function Movie({ addToSavedList }) {
     addToSavedList(movie);
   };
 
+  const deleteMovie = () => {
+    axios.delete(`http://localhost:5000/api/movies/${params.id}`)
+      .then(res => {
+        getMovieList();
+        push('/')
+      })
+      .catch(err => console.log(err.message, err.response))
+  }
+
   useEffect(() => {
     fetchMovie(params.id);
   }, [params.id]);
@@ -31,8 +40,8 @@ function Movie({ addToSavedList }) {
   return (
     <div className="save-wrapper">
       <MovieCard movie={movie} />
-      <Button onClick={() => push(`/UpdateMovie/${movie.id}`)}>Update</Button>
-      <Button>Delete </Button>
+      <Button onClick={() => push(`/update-movie/${movie.id}`)}>Update</Button>
+      <Button onClick={() => deleteMovie()}>Delete </Button>
 
       <div className="save-button" onClick={saveMovie}>
         Save
